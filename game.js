@@ -171,7 +171,34 @@ window.addEventListener('keyup', (e) => {
         }
     }
 
-    
+    //Detect "c" key press to dash
+    if (e.key.toLowerCase() === 'c') {
+        let canSpawnSuperFireball = true;
+
+        // Check if fireball cooldown has passed
+        let TimeSinceLastSuperFireball = Date.now() - lastSuperFireballTime;
+        
+        if (TimeSinceLastSuperFireball < superFireballCooldown) {
+            canSpawnSuperFireball = false; // Still on cooldown
+        }
+
+        const dx = mouseX - player1.x;
+        const dy = mouseY - player1.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 0 && canSpawnSuperFireball) {
+            projectiles.push({
+                x: player1.x,
+                y: player1.y,
+                vx: (dx / distance) * superFireballSpeed,
+                vy: (dy / distance) * superFireballSpeed,
+                size: 50,
+                color: 'red',
+                type: 'superFireball'
+            });
+            lastSuperFireballTime = Date.now(); // Update last shot time
+        }
+    }
 
 });
 
