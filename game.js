@@ -30,6 +30,10 @@ let lastSuperFireballTime = 0;
 const superFireballSpeed = 5;
 const superFireballCooldown = 30000;
 
+//Dash C
+let lastDashTime = 0;
+const dashCooldown = 5000;
+
 //20 seconds or 30 seconds
 
 player1.x =  canvas.width /2 
@@ -174,30 +178,29 @@ window.addEventListener('keyup', (e) => {
 
     //Detect "c" key press to dash
     if (e.key.toLowerCase() === 'c') {
-        let canSpawnSuperFireball = true;
+        let canDash = true;
 
-        // Check if fireball cooldown has passed
-        let TimeSinceLastSuperFireball = Date.now() - lastSuperFireballTime;
+        // Check if dash cooldown has passed
+        let TimeSinceLastDash = Date.now() - lastDashTime;
         
-        if (TimeSinceLastSuperFireball < superFireballCooldown) {
-            canSpawnSuperFireball = false; // Still on cooldown
+        if (TimeSinceLastDash < dashCooldown) {
+            canDash = false; // Still on cooldown
         }
 
         const dx = mouseX - player1.x;
         const dy = mouseY - player1.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance > 0 && canSpawnSuperFireball) {
-            projectiles.push({
-                x: player1.x,
-                y: player1.y,
-                vx: (dx / distance) * superFireballSpeed,
-                vy: (dy / distance) * superFireballSpeed,
-                size: 50,
-                color: 'red',
-                type: 'superFireball'
-            });
-            lastSuperFireballTime = Date.now(); // Update last shot time
+        if (canDash) {
+            // Cap dash distance at 75 pixels
+            const dashDistance = Math.min(distance, 75);
+            
+            if (distance > 0) {
+                // Normalize direction and apply dash distance
+                player1.x += (dx / distance) * dashDistance;
+                player1.y += (dy / distance) * dashDistance;
+                lastDashTime = Date.now();
+            }
         }
     }
 
