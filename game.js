@@ -23,13 +23,14 @@ const windWallWidth = 10;
 const windWallHeight = 75;
 const windWallOffset = 50; // Distance in front of player to spawn the wall
 const windWallCooldown = 15000;
+//15 secs
 
 //Super Fireball R
 let lastSuperFireballTime = 0;
 const superFireballSpeed = 5;
-const superFireballCooldown = 20000;
+const superFireballCooldown = 30000;
 
-
+//20 seconds or 30 seconds
 
 player1.x =  canvas.width /2 
 player1.y = canvas.height /20
@@ -221,23 +222,46 @@ function gameLoop() {
 
         // Check collision with wind wall
         if (windWall) {
-            const dx = projectile.x - windWall.x;
-            const dy = projectile.y - windWall.y;
-            
-            // Rotate projectile position back to wall's local space
-            const cos = Math.cos(-windWall.angle);
-            const sin = Math.sin(-windWall.angle);
-            const localX = dx * cos - dy * sin;
-            const localY = dx * sin + dy * cos;
-            
-            // Check collision with rotated rectangle
-            if (localX > -windWall.width / 2 && 
-                localX < windWall.width / 2 && 
-                localY > -windWall.height / 2 && 
-                localY < windWall.height / 2) {
-                projectiles.splice(i, 1);
-                continue;
+
+            if(projectile.type === 'superFireball') {
+                
+                const dx = projectile.x - windWall.x;
+                const dy = projectile.y - windWall.y;
+                
+                // Rotate projectile position back to wall's local space
+                const cos = Math.cos(-windWall.angle);
+                const sin = Math.sin(-windWall.angle);
+                const localX = dx * cos - dy * sin;
+                const localY = dx * sin + dy * cos;
+                
+                // Check collision with rotated rectangle
+                if (localX > -windWall.width / 2  && 
+                    localX < windWall.width / 2  && 
+                    localY > -windWall.height / 2  && 
+                    localY < windWall.height / 2 ) {
+                    windWall = null;
+                    continue;
+                }
+            } else {
+                const dx = projectile.x - windWall.x;
+                const dy = projectile.y - windWall.y;
+                
+                // Rotate projectile position back to wall's local space
+                const cos = Math.cos(-windWall.angle);
+                const sin = Math.sin(-windWall.angle);
+                const localX = dx * cos - dy * sin;
+                const localY = dx * sin + dy * cos;
+                
+                // Check collision with rotated rectangle
+                if (localX > -windWall.width / 2  && 
+                    localX < windWall.width / 2  && 
+                    localY > -windWall.height / 2  && 
+                    localY < windWall.height / 2 ) {
+                    projectiles.splice(i, 1);
+                    continue;
+                }
             }
+            
         }
 
         if (projectile.type === 'purple') {
@@ -250,6 +274,7 @@ function gameLoop() {
             ctx.closePath();
             ctx.fillStyle = projectile.color;
             ctx.fill();
+                             
         } else {
             ctx.beginPath();
             ctx.arc(projectile.x, projectile.y, projectile.size, 0, Math.PI * 2);
@@ -296,9 +321,10 @@ function gameLoop() {
         //So the remaning time will be how long the windwall stays minus  elapsed, so if elapsed = windWallDuration then the wall disapears
         const remainingTime = windWallDuration - elapsed;
 
-        if (remainingTime <= 0) {
+        if (remainingTime <= 0 ) {
             // Wall expired, remove it
             windWall = null;
+
         } else {
             // Draw the wind wall
             ctx.save();
