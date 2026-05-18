@@ -156,23 +156,35 @@ body {
     border: 3px solid white;
     background-color: #111;
     display: block;
+    width: 100%;
+    height: min(75vh, 760px);
+    max-height: 760px;
+    max-width: 100%;
     margin-bottom: 16px;
-    max-width: calc(100vw - 32px);
+    object-fit: contain;
 }
 
 #homePanel,
 #battlePanel {
-    width: min(720px, calc(100vw - 32px));
+    width: min(960px, calc(100vw - 24px));
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.home-panel {
+    width: 100%;
+}
+
+.home-panel .auth-button {
+    width: 100%;
 }
 
 .home-username,
 .battle-username {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     color: #8df7ff;
     font-weight: 700;
 }
